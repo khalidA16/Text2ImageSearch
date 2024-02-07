@@ -11,6 +11,19 @@ import torch.multiprocessing as mp
 from queue import Queue
 
 
+def save_embeddings(embeddings, mode):
+    file = open(f"{mode}_embeddings", "wb")
+    pickle.dump(embeddings, file)
+    file.close()
+
+
+def load_embeddings(mode):
+    file = open(f"{mode}_embeddings", "rb")
+    embeddings = pickle.load(file)
+    file.close()
+    return embeddings
+
+
 class Embedder:
     def __init__(self) -> None:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -21,43 +34,6 @@ class Embedder:
 
     def __call__(self, *args: Any, **kwds: Any) -> Any:
         pass
-
-    def save_embeddings(self, embeddings, mode):
-        file = open(f"{mode}_embeddings", "wb")
-        pickle.dump(embeddings, file)
-        file.close()
-
-    def load_embeddings(self, mode):
-        file = open(f"{mode}_embeddings", "wb")
-        embeddings = pickle.load(file)
-        file.close()
-        return embeddings
-
-
-class ImageEmbedder(Embedder):
-
-    def __init__(self):
-        super().__init__()
-        self.mode = "image"
-
-    def __call__(self, images_paths):
-        embeddings = list()
-        for img_path in images_paths:
-            inputs = self.processor(
-                images=Image.open(img_path), return_tensors="pt"
-            ).to(self.device)
-        with torch.no_grad():
-            embeddings.append(self.model.get_image_features(**inputs).cpu())
-        self.save_embeddings(embeddings)
-        return embeddings
-
-        # batch processing of images
-        # embeddings = BatchProcessImages()
-        # return embeddings
-
-        # Parallel processing of images
-        # embeddings = ParallelProcessImages(images_paths)
-        # return embeddings
 
 
 class TextEmbedder(Embedder):
@@ -74,14 +50,39 @@ class TextEmbedder(Embedder):
         return embedding
 
 
+class ImageEmbedder(Embedder):
+
+    def __init__(self):
+        super().__init__()
+        self.mode = "image"
+
+    def __call__(self, image_paths):
+        embeddings = list()
+        for img_path in image_paths:
+            inputs = self.processor(
+                images=Image.open(img_path), return_tensors="pt"
+            ).to(self.device)
+        with torch.no_grad():
+            embeddings.append(self.model.get_image_features(**inputs).cpu())
+        save_embeddings(embeddings, self.mode)
+        return embeddings
+
+        # batch processing of images
+        # embeddings = BatchProcessImages(images_paths)
+        # return embeddings
+
+        # Parallel processing of images
+        # embeddings = ParallelProcessImages(images_paths)
+        # return embeddings
+
+
 class BatchProcessImages(ImageEmbedder):
     def __init__(self, batch_size=32):
         super().__init__()
         self.batch_size = batch_size
 
-    def __call__(self, images_paths):
-        # TODO: computation time is same with and without batches
-        dataloader = DataLoader(images_paths, batch_size=self.batch_size, shuffle=False)
+    def __call__(self, image_paths):
+        dataloader = DataLoader(image_paths, batch_size=self.batch_size, shuffle=False)
 
         image_embeddings = list()
 
@@ -108,17 +109,17 @@ class BatchProcessImages(ImageEmbedder):
                 batch_embeddings = self.model.get_image_features(**batch_inputs)
                 image_embeddings.append(batch_embeddings.cpu())
 
-            self.save_embeddings(image_embeddings)
+            save_embeddings(image_embeddings, self.mode)
             return image_embeddings
 
 
 class ParallelProcessImages(ImageEmbedder):
     # Process images in parallel using multiprocessing
 
-    def __call__(self, images_paths, num_workers=4):
+    def __call__(self, image_paths, num_workers=4):
         output_queue = Queue()
         processes = []
-        for img_path in images_paths:
+        for img_path in image_paths:
             process = mp.Process(
                 target=self.process_image, args=(img_path, output_queue)
             )
@@ -132,8 +133,8 @@ class ParallelProcessImages(ImageEmbedder):
         # Retrieve image embeddings from the output queue
         image_embeddings = []
         while not output_queue.empty():
-            image_embeddings.append(output_queue.get())
-            self.save_embeddings(image_embeddings.cpu())
+            image_embeddings.append(output_queue.get().cpu())
+            save_embeddings(image_embeddings, self.mode)
         return image_embeddings
 
     def process_image(self, img_path, output_queue):
@@ -146,8 +147,9 @@ class ParallelProcessImages(ImageEmbedder):
 
 
 if __name__ == "__main__":
-    embd = ImageEmbedder()
-    images_paths = list()
+    image_paths = list()
     for file in os.listdir(DATASET_PATH):
-        images_paths.append(os.path.join(DATASET_PATH, file))
-    embd(images_paths)
+        image_paths.append(os.path.join(DATASET_PATH, file))
+
+    embd = ImageEmbedder()
+    embd(image_paths)
