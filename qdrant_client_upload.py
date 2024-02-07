@@ -1,7 +1,6 @@
 from qdrant_client import QdrantClient, models
 from config import COLLECTION_NAME, QDRANT_URL, QDRANT_API_KEY
-from embedder import ImageEmbedder
-from utils import get_image_paths, load_embeddings, parse_args
+from utils import get_image_paths, load_embeddings
 
 
 class UploadQdrant:
@@ -11,23 +10,14 @@ class UploadQdrant:
             api_key=QDRANT_API_KEY,
         )
 
-    def upload(self, image_paths, args):
+    def upload(self, image_paths):
         self.image_paths = image_paths
-        self.create_collection(args)
+        self.create_collection()
         self.upload_collection()
 
-    def create_collection(self, args):
-        if args.load:
-            print(
-                f'Creating collection "{COLLECTION_NAME}" from pre-created Image Embeddings'
-            )
-            self.image_embeddings = load_embeddings(mode="image")
-        else:
-            # Create image embeddings from ImageEmbedder
-            print(
-                f'Creating collection "{COLLECTION_NAME}" from pre-created ImageEmbedder model'
-            )
-            self.image_embeddings = ImageEmbedder(self.image_paths,args.batch_size)
+    def create_collection(self):
+        print(f'Creating collection "{COLLECTION_NAME}" from Image Embeddings')
+        self.image_embeddings = load_embeddings()
 
         self.client.recreate_collection(
             collection_name=COLLECTION_NAME,
@@ -62,7 +52,6 @@ class UploadQdrant:
 
 
 if __name__ == "__main__":
-    args = parse_args()
     image_paths = get_image_paths()
     qdclient = UploadQdrant()
-    qdclient.upload(image_paths, args)
+    qdclient.upload(image_paths)
