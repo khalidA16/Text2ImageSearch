@@ -6,6 +6,7 @@ from qdrant_client_upload import UploadQdrant
 query_embedder = TextEmbedder()
 qdclient = UploadQdrant().client
 
+
 def find_best_matches(query, embedder, qdclient, limit):
     query_embedding = embedder([query])
     search_result = qdclient.search(
@@ -46,9 +47,7 @@ def main():
 
     # Button to trigger image search
     if st.button("Search"):
-        images = find_best_matches(
-            query, query_embedder, qdclient, num_images
-        )
+        images = find_best_matches(query, query_embedder, qdclient, num_images)
         if images:
             # Display images
             display_images(images)
@@ -56,5 +55,5 @@ def main():
             st.write("No images found matching the query.")
 
 
-if __name__ == "__main__":  
+if __name__ == "__main__":
     main()

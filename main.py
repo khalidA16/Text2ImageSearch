@@ -3,6 +3,7 @@ from qdrant_client_upload import UploadQdrant
 from utils import get_image_paths, parse_args
 import subprocess
 
+
 def main():
     args = parse_args()
     image_paths = get_image_paths()
@@ -18,8 +19,6 @@ def main():
 
     print("Starting Streamlit app...")
     subprocess.Popen(["streamlit", "run", "app.py"])
-
-   
 
 
 if __name__ == "__main__":

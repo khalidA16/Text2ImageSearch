@@ -1,2 +1,10 @@
-numpy
-pandas
+torch
+torchvision
+torchaudio
+transformers
+qdrant-client
+cv2
+PIL
+seaborn
+pickle
+streamlit
