@@ -2,29 +2,49 @@ import streamlit as st
 from config import COLLECTION_NAME
 from embedder import TextEmbedder
 from qdrant_client_upload import UploadQdrant
+from typing import List
 
 query_embedder = TextEmbedder()
 qdclient = UploadQdrant().client
 
 
-def find_best_matches(query, embedder, qdclient, limit):
+def find_best_matches(query: str, embedder, qdclient, limit: int) -> List[str]:
+    """
+    Finds the best matching images for a given query.
+
+    Args:
+        query (str): The query text.
+        embedder: The embedding function to generate query embeddings.
+        qdclient: The Qdrant client for searching image embeddings.
+        limit (int): The maximum number of images to return.
+
+    Returns:
+        List[str]: A list of paths to the best matching images.
+    """
     query_embedding = embedder([query])
     search_result = qdclient.search(
         collection_name=COLLECTION_NAME,
         query_vector=query_embedding.squeeze().tolist(),
         limit=limit,
     )
-    hit_paths = list()
-    for hit in search_result:
-        hit_paths = [hit.payload["path"] for hit in search_result]
-        # hit_paths.append(hit_path)
+    hit_paths = [hit.payload["path"] for hit in search_result]
     return hit_paths
 
 
-def display_images(images):
+def display_images(images: List[str]) -> None:
+    """
+    Displays images horizontally using columns layout.
+
+    Args:
+        images (List[str]): A list of paths to the images to be displayed.
+
+    Returns:
+        None
+    """
     # Display images horizontally using columns layout
     st.subheader("Search Results")
-    col1, col2, col3 = st.columns(3)  # Divide the screen into 3 columns
+    # Divide the screen into 3 columns
+    col1, col2, col3 = st.columns(3)  
     for idx, image in enumerate(images):
         if idx % 3 == 0:
             column = col1
@@ -36,7 +56,13 @@ def display_images(images):
             st.image(image, width=150, caption=f"Image {idx+1}")
 
 
-def main():
+def main() -> None:
+    """
+    Main function to run the  Image Search Streamlite App.
+
+    Returns:
+        None
+    """
     st.title("Image Search App")
 
     # Input query

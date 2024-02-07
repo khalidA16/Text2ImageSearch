@@ -16,11 +16,6 @@ echo -e "${YELLOW}Virtual environment activated.${NC}"
 # install libraries
 pip install -r requirements.txt
 
-# deactivate virtual environment
-#echo "Deactivating virtual environment..."
-#deactivate
-#echo "Virtual environment deactivated"
-
 # ------ Prepare dataset ------
 
 mkdir image_dataset

@@ -4,7 +4,13 @@ from utils import get_image_paths, parse_args
 import subprocess
 
 
-def main():
+def main() -> None:
+    """
+    Main function to run the text2image search system.
+
+    Returns:
+        None
+    """
     args = parse_args()
     image_paths = get_image_paths()
 
