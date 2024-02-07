@@ -3,7 +3,7 @@ Welcome to the Text2Image Search Implementation project!
 ## Architecture
 The Text2Image search implementation follows the following architecture:
 
-* CLIP Model:
+* CLIP (Contrastive Language-Image Pre-Training) Model:
 
     Utilizes the CLIP model to generate image and query (text) embeddings.
 * Qdrant Vector Search:
@@ -17,20 +17,24 @@ The dataset used in this project consists of advertisement images. An explorator
 
 ## Installation
 * Clone the repository
+
     ```
     git clone https://github.com/khalidA16/Text2ImageSearch.git
     ```
 * Run the following command to set up the virtual environment and install dependencies listed in `requirements.txt`, as well as download the image dataset to the `image_dataset` directory:
+
     ```
     source setup.sh
     ```
 ## Run 
 #### Start Qdrant 
 * Pull qdrant docker image 
+
     ```
     docker pull qdrant/qdrant
     ```
 * Run qdrant 
+
     ```
     docker run -d -p 6333:6333 qdrant/qdrant
      ```
@@ -39,6 +43,7 @@ The dataset used in this project consists of advertisement images. An explorator
 
 #### Run Text2Image Search Implementation
 * To use the Text2Image Search Implementation, run the following command:
+
     ```
     python main.py --load=True
     ```
@@ -52,3 +57,6 @@ The dataset used in this project consists of advertisement images. An explorator
 
 ## Query Evaluation
 The results of query evaluations on the Text2Image Search implementation can be found in the `query_eval/query_evaluation.md` file. This document provides insights into the performance of the search system across various query types and scenarios.
+
+## Challenges
+During implementation, generating image embeddings from CLIP proved slow, leading to system hangs. Although I attempted batch and parallel processing for optimization, further exploration is needed. In the future, I plan to explore alternative strategies to enhance efficiency.
