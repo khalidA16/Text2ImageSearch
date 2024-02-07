@@ -1,7 +1,7 @@
-import os
 from qdrant_client import QdrantClient, models
-from config import DATASET_PATH, COLLECTION_NAME, QDRANT_URL, QDRANT_API_KEY
-from embedder import ImageEmbedder, load_embeddings
+from config import COLLECTION_NAME, QDRANT_URL, QDRANT_API_KEY
+from embedder import ImageEmbedder
+from utils import get_image_paths, load_embeddings, parse_args
 
 
 class UploadQdrant:
@@ -11,13 +11,13 @@ class UploadQdrant:
             api_key=QDRANT_API_KEY,
         )
 
-    def __call__(self, image_paths, load=True):
+    def upload(self, image_paths, args):
         self.image_paths = image_paths
-        self.create_collection(load)
+        self.create_collection(args)
         self.upload_collection()
 
-    def create_collection(self, load=True):
-        if load:
+    def create_collection(self, args):
+        if args.load:
             print(
                 f'Creating collection "{COLLECTION_NAME}" from pre-created Image Embeddings'
             )
@@ -27,7 +27,7 @@ class UploadQdrant:
             print(
                 f'Creating collection "{COLLECTION_NAME}" from pre-created ImageEmbedder model'
             )
-            self.image_embeddings = ImageEmbedder(self.image_paths)
+            self.image_embeddings = ImageEmbedder(self.image_paths,args.batch_size)
 
         self.client.recreate_collection(
             collection_name=COLLECTION_NAME,
@@ -62,9 +62,7 @@ class UploadQdrant:
 
 
 if __name__ == "__main__":
-    image_paths = list()
-    for file in os.listdir(DATASET_PATH):
-        image_paths.append(os.path.join(DATASET_PATH, file))
-
+    args = parse_args()
+    image_paths = get_image_paths()
     qdclient = UploadQdrant()
-    qdclient(image_paths, load=True)
+    qdclient.upload(image_paths, args)

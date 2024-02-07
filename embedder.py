@@ -1,27 +1,12 @@
-import os
 from typing import Any
 import torch
 from transformers import CLIPModel, CLIPProcessor
-from config import DATASET_PATH
 from PIL import Image
 from torch.utils.data import DataLoader
 from collections import defaultdict
-import pickle
 import torch.multiprocessing as mp
 from queue import Queue
-
-
-def save_embeddings(embeddings, mode):
-    file = open(f"{mode}_embeddings", "wb")
-    pickle.dump(embeddings, file)
-    file.close()
-
-
-def load_embeddings(mode):
-    file = open(f"{mode}_embeddings", "rb")
-    embeddings = pickle.load(file)
-    file.close()
-    return embeddings
+from utils import get_image_paths, save_embeddings, parse_args
 
 
 class Embedder:
@@ -56,7 +41,7 @@ class ImageEmbedder(Embedder):
         super().__init__()
         self.mode = "image"
 
-    def __call__(self, image_paths):
+    def __call__(self, image_paths,batch_size):
         embeddings = list()
         for img_path in image_paths:
             inputs = self.processor(
@@ -68,7 +53,7 @@ class ImageEmbedder(Embedder):
         return embeddings
 
         # batch processing of images
-        # embeddings = BatchProcessImages(images_paths)
+        # embeddings = BatchProcessImages(images_paths,batch_size)
         # return embeddings
 
         # Parallel processing of images
@@ -77,7 +62,7 @@ class ImageEmbedder(Embedder):
 
 
 class BatchProcessImages(ImageEmbedder):
-    def __init__(self, batch_size=32):
+    def __init__(self, batch_size):
         super().__init__()
         self.batch_size = batch_size
 
@@ -147,9 +132,7 @@ class ParallelProcessImages(ImageEmbedder):
 
 
 if __name__ == "__main__":
-    image_paths = list()
-    for file in os.listdir(DATASET_PATH):
-        image_paths.append(os.path.join(DATASET_PATH, file))
-
+    args = parse_args()
+    image_paths = get_image_paths()
     embd = ImageEmbedder()
-    embd(image_paths)
+    embd(image_paths,args.batch_size)
