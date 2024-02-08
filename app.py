@@ -31,7 +31,7 @@ def find_best_matches(query: str, embedder, qdclient, limit: int) -> List[str]:
     return hit_paths
 
 
-def display_images(images: List[str]) -> None:
+def display_results(images: List[str]) -> None:
     """
     Displays images horizontally using columns layout.
 
@@ -63,25 +63,22 @@ def main() -> None:
     Returns:
         None
     """
-
+    query = None
     st.markdown(
         "<h1 style='text-align: center;'>Text2Image Search App</h1>",
         unsafe_allow_html=True,
     )
     # Input query
-    query = st.text_input("Enter your query:")
+    query = st.text_input("Enter your query:", key="query_input")
     num_images = st.number_input(
         "Number of images to show", min_value=1, max_value=10, value=5
     )
 
-    # Button to trigger image search
-    if st.button("Search"):
+    if query:
+        # find results from qdrant
         images = find_best_matches(query, query_embedder, qdclient, num_images)
-        if images:
-            # Display images
-            display_images(images)
-        else:
-            st.write("No images found matching the query.")
+        # display search results
+        display_results(images)
 
 
 if __name__ == "__main__":

@@ -76,3 +76,5 @@ The search system uses a steamlit application to interact and display results.
 ## Query Evaluation
 The results of query evaluations on the Text2Image Search implementation can be found in the `query_eval/query_evaluation.md` file. This document provides insights into the performance of the search system across various query types and scenarios.
 
+## Additional Improvements
+while the implemented Streamlit app interface prioritizes simplicity, there remains room for enhancing the user experience to ensure higher quality interactions.
