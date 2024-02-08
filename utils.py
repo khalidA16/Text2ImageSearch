@@ -65,8 +65,8 @@ def parse_args() -> argparse.Namespace:
 
     return args
 
-
-def get_hit_scores(query: str, embedder, qdclient, limit: int) -> dict:
+# used for evaluation only
+def get_hit_scores(query: str, embedder, qdclient) -> dict:
     query_embedding = embedder([query])
     search_result = qdclient.search(
         collection_name=COLLECTION_NAME,

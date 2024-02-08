@@ -1,8 +1,7 @@
-from embedder import ImageEmbedder, TextEmbedder
+from embedder import ImageEmbedder
 from qdrant_client_upload import UploadQdrant
 from utils import get_image_paths, parse_args
 import subprocess
-from config import COLLECTION_NAME
 
 
 def main() -> None:

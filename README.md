@@ -21,6 +21,7 @@ The dataset used for this project comprises advertisement images. This dataset i
 
     ```
     git clone https://github.com/khalidA16/Text2ImageSearch.git
+    cd Text2ImageSearch/
     ```
 * Run the following command to set up the virtual environment and install dependencies listed in `requirements.txt`, as well as download the image dataset to the `image_dataset` directory:
 

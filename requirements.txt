@@ -3,8 +3,8 @@ torchvision
 torchaudio
 transformers
 qdrant-client
-cv2
-PIL
+opencv-python
+pillow
 seaborn
-pickle
 streamlit
+tqdm
