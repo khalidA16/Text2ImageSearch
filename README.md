@@ -12,6 +12,7 @@ The Text2Image search implementation follows the following architecture:
 * Streamlit Application:
 
     Serves the entire system with a Streamlit application, providing an interactive interface for users to perform text-to-image searches.
+
 ## Dataset 
 The dataset used in this project consists of advertisement images. An exploratory evaluation of the dataset has been conducted in the `data_exploration.ipynb` script.
 
@@ -48,6 +49,18 @@ The dataset used in this project consists of advertisement images. An explorator
     python main.py --load=True
     ```
     set `---load=True` if you want to use the pre-created image embeddings. To generate new image embeddings, set it to `False`.
+
+#### Streamlit App Interface
+The search system uses a steamlit application to interact and display results.
+
+* Under 'Enter your query', type the query to search results for.
+
+* No. of images to display for your query can be adjusted in 'Number of images to show'. (Min 1 and Max 10 images).
+
+* Images related to the query will be displayed under ' Search Results'
+
+![image info](query_eval/images/app.png)
+
 
 ## Scripts Overview
 * `embedder.py`: Contains the `Embedder` class, which generates image and text embeddings using the CLIP model.

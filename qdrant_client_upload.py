@@ -11,6 +11,7 @@ class UploadQdrant:
     Attributes:
         client (QdrantClient): An instance of QdrantClient used to interact with the Qdrant API.
         image_paths (List[str]): A list of paths to the images.
+        image_embeddings (List[list]): A list of image embeddings to be uploaded.
     """
 
     def __init__(self) -> None:
@@ -41,12 +42,12 @@ class UploadQdrant:
             None
         """
         print(f'Creating collection "{COLLECTION_NAME}" from Image Embeddings')
-        image_embeddings = load_embeddings()
+        self.image_embeddings = load_embeddings()
 
         self.client.recreate_collection(
             collection_name=COLLECTION_NAME,
             vectors_config=models.VectorParams(
-                size=image_embeddings[0].size(1), distance=models.Distance.COSINE
+                size=self.image_embeddings[0].size(1), distance=models.Distance.COSINE
             ),
             # to reduce memory usage
             # See: https://github.com/qdrant/qdrant_demo/blob/0c14790d89ab9d2b865aa2832341ab29fd56bb82/qdrant_demo/init_collection_startups.py#L35

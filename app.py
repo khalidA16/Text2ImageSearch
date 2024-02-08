@@ -44,7 +44,7 @@ def display_images(images: List[str]) -> None:
     # Display images horizontally using columns layout
     st.subheader("Search Results")
     # Divide the screen into 3 columns
-    col1, col2, col3 = st.columns(3)  
+    col1, col2, col3 = st.columns(3)
     for idx, image in enumerate(images):
         if idx % 3 == 0:
             column = col1
@@ -63,8 +63,11 @@ def main() -> None:
     Returns:
         None
     """
-    st.title("Image Search App")
 
+    st.markdown(
+        "<h1 style='text-align: center;'>Text2Image Search App</h1>",
+        unsafe_allow_html=True,
+    )
     # Input query
     query = st.text_input("Enter your query:")
     num_images = st.number_input(
