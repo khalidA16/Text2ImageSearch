@@ -5,20 +5,6 @@ import subprocess
 from config import COLLECTION_NAME
 
 
-def get_hit_scores(query: str, embedder, qdclient, limit: int) -> dict:
-    query_embedding = embedder([query])
-    search_result = qdclient.search(
-        collection_name=COLLECTION_NAME,
-        query_vector=query_embedding.squeeze().tolist(),
-        limit=11106,
-    )
-
-    all_scores = dict()
-    for hit in search_result:
-        all_scores[hit.payload["path"]] = hit.score
-    return all_scores
-
-
 def main() -> None:
     """
     Main function to run the text2image search system.
@@ -31,9 +17,11 @@ def main() -> None:
 
     if not args.load:
         # create new image embeddings
+        print("Generating new Image embeddings")
         embedder = ImageEmbedder()
-        embedder()
-
+        embedder(image_paths, args.bs)
+    else:
+        print("Using saved Image embeddings")
     # create qdrant client
     qdclient = UploadQdrant()
     qdclient.upload(image_paths)

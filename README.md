@@ -14,7 +14,7 @@ The Text2Image search implementation follows the following architecture:
     Serves the entire system with a Streamlit application, providing an interactive interface for users to perform text-to-image searches.
 
 ## Dataset 
-The dataset used in this project consists of advertisement images. An exploratory evaluation of the dataset has been conducted in the `data_exploration.ipynb` script.
+The dataset used for this project comprises advertisement images. This dataset includes advertisements from various countries and in various languages. The total dataset size is 11106. An exploratory evaluation of the dataset has been conducted in the `data_exploration.ipynb` script.
 
 ## Installation
 * Clone the repository
@@ -46,9 +46,13 @@ The dataset used in this project consists of advertisement images. An explorator
 * To use the Text2Image Search Implementation, run the following command:
 
     ```
-    python main.py --load=True
+    python main.py 
     ```
-    set `---load=True` if you want to use the pre-created image embeddings. To generate new image embeddings, set it to `False`.
+    To use saved image embeddings instead of generating, run:
+
+    ```
+    python main.py --load
+    ```
 
 #### Streamlit App Interface
 The search system uses a steamlit application to interact and display results.
@@ -71,5 +75,3 @@ The search system uses a steamlit application to interact and display results.
 ## Query Evaluation
 The results of query evaluations on the Text2Image Search implementation can be found in the `query_eval/query_evaluation.md` file. This document provides insights into the performance of the search system across various query types and scenarios.
 
-## Challenges
-During implementation, generating image embeddings from CLIP proved slow, leading to system hangs. Although I attempted batch and parallel processing for optimization, further exploration is needed. In the future, I plan to explore alternative strategies to enhance efficiency.

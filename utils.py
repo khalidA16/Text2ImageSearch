@@ -1,6 +1,6 @@
 import pickle
 import os
-from config import DATASET_PATH
+from config import DATASET_PATH, COLLECTION_NAME
 import argparse
 
 
@@ -27,6 +27,7 @@ def save_embeddings(embeddings: list) -> None:
     Returns:
         None
     """
+
     with open("image_embeddings", "wb") as file:
         pickle.dump(embeddings, file)
 
@@ -52,8 +53,28 @@ def parse_args() -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--load", type=bool, default="True", help="load pre-creted image embeddings"
+        "--load", action="store_true", help="load saved image embeddings"
+    )
+    parser.add_argument(
+        "--bs",
+        type=int,
+        default=32,
+        help="Batch size for ImageEmbedder to create image embeddings",
     )
     args = parser.parse_args()
 
     return args
+
+
+def get_hit_scores(query: str, embedder, qdclient, limit: int) -> dict:
+    query_embedding = embedder([query])
+    search_result = qdclient.search(
+        collection_name=COLLECTION_NAME,
+        query_vector=query_embedding.squeeze().tolist(),
+        limit=11106,
+    )
+
+    all_scores = dict()
+    for hit in search_result:
+        all_scores[hit.payload["path"]] = hit.score
+    return all_scores

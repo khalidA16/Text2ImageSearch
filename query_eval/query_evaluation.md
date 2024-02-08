@@ -13,7 +13,7 @@ The implemented search system was tested on different levels of queries:
       ![image info](images/food_in_a_box.png)
       *Top 5 hits*
 * Hard Queries:
-    More descriptive queriess
+    More descriptive queries
     * Red haired woman with red lips and blue eyes on a magazine cover
     ![image info](images/red_hair.png)
     *Top 5 hits*
@@ -67,18 +67,19 @@ In the thrid case, a German word 'sicherheit' was used as a query which did not 
 
 This observation supports our earlier findings, that system appeared to prioritize contextual understanding for short queries. 
 
-Overall , It suggests that the system's performance may vary depending on the complexity and specificity of the query. As queries become more descriptive, the system may exhibit a tendency to focus more on specific keywords. Where as if the query is very simple, then the system may find broad contextual meanings resulting in inaccurate findings.
+Overall, it suggests that the system's performance may vary depending on the complexity and specificity of the query. As queries become more descriptive, the system may exhibit a tendency to focus more on specific keywords. Where as if the query is very simple, then the system may find broad contextual meanings resulting in inaccurate findings.
 
-## Method of Quantitative Evaluation of Retrieval Accuracy:
+## Method of Quantitative Evaluation of Retrieval Accuracy and Improvements:
 
 Following things can be considered during quantitative evaluations:
+
 * Data Labelling:
 
-    Ensure accurate lavbelling and adding detailed meta-data of each image with details like brand names,product categories,objects in the scene,scenario,weather etc. Consider incorporating sentiment analysis for better understanding of user queries.
+    Ensure accurate labelling and adding detailed meta-data of each image with details like brand names, product categories, objects in the scene, scenario, weather etc.
 
 * Query Preparation:
 
-    Instead of relying solely on predefined queries, consider incorporating user feedback to generate queries dynamically. This approach can mimic real-world search scenarios more accurately and provide insights into user intent that may not be captured by static queries. Additionally, these queries can be filtered to address potential challenges stemming from ambiguity or noise in user input.
+    Instead of relying solely on predefined queries, consider incorporating user inputs to generate queries dynamically. This approach can mimic real-world search scenarios more accurately and provide insights into user intent that may not be captured by static queries. Additionally, these queries can be filtered to address potential challenges stemming from ambiguity or noise in user input.
    
 
 * Evaluation Metrics:

@@ -47,7 +47,7 @@ class UploadQdrant:
         self.client.recreate_collection(
             collection_name=COLLECTION_NAME,
             vectors_config=models.VectorParams(
-                size=self.image_embeddings[0].size(1), distance=models.Distance.COSINE
+                size=len(self.image_embeddings[0]), distance=models.Distance.COSINE
             ),
             # to reduce memory usage
             # See: https://github.com/qdrant/qdrant_demo/blob/0c14790d89ab9d2b865aa2832341ab29fd56bb82/qdrant_demo/init_collection_startups.py#L35
@@ -72,7 +72,7 @@ class UploadQdrant:
         ):
             point = models.PointStruct(
                 id=idx,  # Use loop idx as ID
-                vector=embedding.squeeze().tolist(),
+                vector=embedding,
                 payload={"path": path},
             )
             response = self.client.upsert(
